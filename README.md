@@ -1,2 +1,1 @@
-# kubernetes-deployment-ssl-termination
-Deployment for SSL Termination (nginx container)
+# Kubernetes deployment dor SSL termination (based on nginx container)
