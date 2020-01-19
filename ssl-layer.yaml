@@ -1,0 +1,41 @@
+# ssl-layer.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssl-layer-for-website
+spec:
+  selector:
+    matchLabels:
+      app: ssl-layer-app
+      tier: prod
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ssl-layer-app
+        tier: prod
+    spec:
+      containers:
+      - name: ssl-layer-container
+        image: 112904****.dkr.ecr.us-west-1.amazonaws.com/ssl-layer:3.0
+        volumeMounts:
+        - name: tls-certs
+          mountPath: "/etc/ssl/certs"
+          readOnly: true
+        env:
+        - name: REMOTEHOST
+          value: "192.168.1.1"
+        - name: REMOTEPORT
+          value: "80"
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: tls-certs
+        secret:
+          secretName: k8s-cluster-tls
+          defaultMode: 256
